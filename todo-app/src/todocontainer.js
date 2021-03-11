@@ -6,6 +6,7 @@ const TodoContainer = () => {
 
 	const [todos, setTodos] = useState([])
 	const [input,setInput] = useState('')
+	const [tag,setTag] = useState([])
 
 	const newToDo = {title:input,done:false}
 
@@ -18,11 +19,12 @@ const TodoContainer = () => {
 	}
 
 	const onSubmit = (newTitle) => {
-		axios.post('/api/v1/todos/',{todo: newToDo})
+		axios.post('/api/v1/todos/',{todo: newToDo, tags: tag})
 		.then(response => {
 			const newTodos = [...todos,response.data]
 			setTodos(newTodos)
 			setInput('')
+			setTag([])
 		})
 		.catch(error => console.log(error))
 	}
@@ -31,6 +33,14 @@ const TodoContainer = () => {
 		event.preventDefault();
 		setInput(event.target.value);
 		//console.log(event.target.value)
+	}
+
+	const onTagChange = (event) => {
+		event.preventDefault();
+		const test = event.target.value
+		const array = [...new Set(test.split(",").map((t) => t.toUpperCase()))]
+		setTag([...array])
+		console.log(tag)
 	}
 
 	const onDone = (event,itemID) => {
@@ -62,6 +72,7 @@ const TodoContainer = () => {
 	return (
 		<div>
 			<div>
+				<input type='text' value={tag} placeholder='type a tag' onChange={(e)=>onTagChange(e)} />
 				<input type='text' value={input} placeholder="add a task" onChange={(e)=>onTextChange(e)}/>
 				<button type='submit' onClick={()=>onSubmit(input)}>Add</button>
 			</div>
@@ -73,7 +84,7 @@ const TodoContainer = () => {
 						return (
 							<li key={item.id}>
 								<input type='checkbox' checked={item.done} onChange={(e)=>onDone(e,id)}/>
-								<label >{item.title} isDone? {item.done.toString()} </label>
+								<label >{item.title} isDone? {item.done.toString()} tagged {console.log(item)} </label>
 								<button type='submit' onClick={(e)=>onDelete(e,id)}>Delete</button>
 							</li>
 							)

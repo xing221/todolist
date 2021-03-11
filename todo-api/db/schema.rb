@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_08_183846) do
+ActiveRecord::Schema.define(version: 2021_03_10_081734) do
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer "tag_id", null: false
+    t.integer "todo_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["todo_id"], name: "index_taggings_on_todo_id"
+  end
+
+  create_table "tags", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "todos", force: :cascade do |t|
     t.string "title"
@@ -19,4 +34,6 @@ ActiveRecord::Schema.define(version: 2021_03_08_183846) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "taggings", "tags"
+  add_foreign_key "taggings", "todos"
 end
