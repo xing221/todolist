@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+import {Link, useHistory} from 'react-router-dom'
 
 
 const TodoContainer = () => {
@@ -9,6 +10,7 @@ const TodoContainer = () => {
 	const [tag,setTag] = useState([])
 
 	const newToDo = {title:input,done:false}
+	const history = useHistory()
 
 	const getTodos = () => {
 		axios.get('/api/v1/todos')
@@ -25,6 +27,8 @@ const TodoContainer = () => {
 			setTodos(newTodos)
 			setInput('')
 			setTag([])
+			const path = `/`
+			history.push(path)
 		})
 		.catch(error => console.log(error))
 	}
@@ -40,19 +44,8 @@ const TodoContainer = () => {
 		const test = event.target.value
 		const array = [...new Set(test.split(",").map((t) => t.toUpperCase()))]
 		setTag([...array])
-		console.log(tag)
 	}
 
-	const onDone = (event,itemID) => {
-		event.preventDefault();
-		axios.put(`/api/v1/todos/${itemID}`, {todo: {done: event.target.checked}})
-		.then(response => {
-			const newTodos = todos.map(item => itemID === item.id ? response.data : item)
-			setTodos(newTodos)
-		})
-		.catch(error => console.log(error))
-
-	}
 
 	const onDelete = (event,itemID) => {
 		event.preventDefault();
@@ -64,13 +57,14 @@ const TodoContainer = () => {
 		.catch(error => console.log(error))
 	}
 
+
 	useEffect(() => {
 		getTodos()
 	}, []);
 
-
 	return (
 		<div>
+			<h1>Todo List</h1>
 			<div>
 				<input type='text' value={tag} placeholder='type a tag' onChange={(e)=>onTagChange(e)} />
 				<input type='text' value={input} placeholder="add a task" onChange={(e)=>onTextChange(e)}/>
@@ -81,10 +75,11 @@ const TodoContainer = () => {
 				<ul>
 					{todos.map( (item) => {
 						const id = item.id
+						console.log('this is item')
+						console.log(item)
 						return (
 							<li key={item.id}>
-								<input type='checkbox' checked={item.done} onChange={(e)=>onDone(e,id)}/>
-								<label >{item.title} isDone? {item.done.toString()} tagged {console.log(item)} </label>
+								<label >{item.title} isDone? {item.done.toString()} tagged {console.log(item.tags)} </label>
 								<button type='submit' onClick={(e)=>onDelete(e,id)}>Delete</button>
 							</li>
 							)

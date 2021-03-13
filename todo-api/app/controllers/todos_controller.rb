@@ -18,7 +18,7 @@ class TodosController < ApplicationController
   def update
   	todo = Todo.find(params[:id])
   	todo.update(todo_params)
-  	render json: todo
+  	render json: todo, include: :tags
   end
 
   def destroy
