@@ -17,6 +17,9 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
 const useStyles = makeStyles({
 	overall: {
 		position: "relative",
@@ -24,13 +27,13 @@ const useStyles = makeStyles({
 	},
 });
 
+
 const Home = (props) => {
 	const [todos, setTodos] = useState([]);
 	const [search, setSearch] = useState("");
-	const { match,setCurrentPage } = props;
+	const { match, setCurrentPage } = props;
 	const history = useHistory();
 	const classes = useStyles();
-
 
 	const getTodos = () => {
 		axios
@@ -45,11 +48,11 @@ const Home = (props) => {
 	const onDone = (event, itemID) => {
 		axios
 			.put(`/api/v1/todos/${itemID}`, {
-				todo: {done: event.target.checked }
+				todo: { done: event.target.checked },
 			})
 			.then((response) => {
-				console.log('this is the response')
-				console.log(response)
+				console.log("this is the response");
+				console.log(response);
 				const newTodos = todos.map((item) =>
 					itemID === item.id ? response.data : item
 				);
@@ -73,13 +76,12 @@ const Home = (props) => {
 			.catch((error) => console.log(error));
 	};
 
-
 	useEffect(() => {
 		getTodos();
-		setCurrentPage('Tasks')
+		setCurrentPage("Tasks");
 	}, []);
 
-	console.log(todos)
+	console.log(todos);
 
 	return (
 		<div className={classes.overall}>
@@ -106,102 +108,106 @@ const Home = (props) => {
 							<TextField
 								fullWidth
 								variant="outlined"
-								placeholder="search"
+								label="search"
 								onChange={(e) => onSearch(e)}
 							/>
 						</Grid>
 						<Grid item xs={12} sm={8}>
 							<Paper>
-							<List>
-								{search === ""
-									? todos.map((todo) => {
-											if (!todo.done) {
-												return (
-													<ListItem
-														key={todo.id}
-														button
-													>
-														<Checkbox
-															checked={todo.done}
-															onChange={(e) =>
-																onDone(
-																	e,
-																	todo.id
-																)
-															}
-														/>
-														<ListItemText
-															primary={`${todo.title}`}
-														/>
-														<Button
-															onClick={(e) =>
-																history.push(
-																	`/todos/edit/${todo.id}`
-																)
-															}
+								<List>
+									{search === ""
+										? todos.map((todo) => {
+												if (!todo.done) {
+													return (
+														<ListItem
+															key={todo.id}
+															button
 														>
-															Edit
-														</Button>
-														<Button
-															onClick={(e) =>
-																onDelete(
-																	e,
-																	todo.id,
-																)
-															}
+															<Checkbox
+																checked={
+																	todo.done
+																}
+																onChange={(e) =>
+																	onDone(
+																		e,
+																		todo.id
+																	)
+																}
+															/>
+															<ListItemText
+																primary={`${todo.title}`}
+															/>
+															<Button
+																onClick={(e) =>
+																	history.push(
+																		`/todos/edit/${todo.id}`
+																	)
+																}
+															>
+																Edit
+															</Button>
+															<Button
+																onClick={(e) =>
+																	onDelete(
+																		e,
+																		todo.id
+																	)
+																}
+															>
+																Delete
+															</Button>
+														</ListItem>
+													);
+												}
+										  })
+										: todos.map((todo) => {
+												if (
+													!todo.done &&
+													todo.title.includes(search)
+												) {
+													return (
+														<ListItem
+															key={todo.id}
+															button
 														>
-															Delete
-														</Button>
-													</ListItem>
-												);
-											}
-									  })
-									: todos.map((todo) => {
-											if (
-												!todo.done &&
-												todo.title.includes(search)
-											) {
-												return (
-													<ListItem
-														key={todo.id}
-														button
-													>
-														<Checkbox
-															checked={todo.done}
-															onChange={(e) =>
-																onDone(
-																	e,
-																	todo.id
-																)
-															}
-														/>
-														<ListItemText
-															primary={`${todo.title}`}
-														/>
-														<Button
-															onClick={(e) =>
-																history.push(
-																	`/todos/edit/${todo.id}`
-																)
-															}
-														>
-															Edit
-														</Button>
-														<Button
-															onClick={(e) =>
-																onDelete(
-																	e,
-																	todo.id
-																)
-															}
-														>
-															Delete
-														</Button>
-													</ListItem>
-												);
-											}
-									  })}
-							</List>
+															<Checkbox
+																checked={
+																	todo.done
+																}
+																onChange={(e) =>
+																	onDone(
+																		e,
+																		todo.id
+																	)
+																}
+															/>
+															<ListItemText
+																primary={`${todo.title}`}
+															/>
+															<Button
+																onClick={(e) =>
+																	history.push(
+																		`/todos/edit/${todo.id}`
+																	)
+																}
+															>
+																Edit
+															</Button>
+															<Button
+																onClick={(e) =>
+																	onDelete(
+																		e,
+																		todo.id
+																	)
+																}
+															>
+																Delete
+															</Button>
+														</ListItem>
+													);
+												}
+										  })}
+								</List>
 							</Paper>
 						</Grid>
 						{/*				<div>

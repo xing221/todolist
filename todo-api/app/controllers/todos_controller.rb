@@ -7,7 +7,10 @@ class TodosController < ApplicationController
   def create
   	todo = Todo.create(todo_params)
     todo.tags = tags_params.map{|tag| Tag.where(name: tag).first_or_create!(name: tag)}
-  	render json: todo
+  	if !todo.valid?
+      render json: todo[:error], status: 422 and return
+    end
+    render json: todo
   end
 
   def show
@@ -32,7 +35,7 @@ class TodosController < ApplicationController
 
   private
   	def todo_params
-  	  params.require(:todo).permit(:title, :done)
+  	  params.require(:todo).permit(:title, :done, :comment)
   	end
     def tags_params
       params['tags'].nil? || params['tags'].empty? ? [] : params.require(:tags)

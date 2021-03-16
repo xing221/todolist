@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_10_081734) do
+ActiveRecord::Schema.define(version: 2021_03_16_053249) do
 
   create_table "taggings", force: :cascade do |t|
     t.integer "tag_id", null: false
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2021_03_10_081734) do
     t.boolean "done"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.text "comment"
   end
 
   add_foreign_key "taggings", "tags"

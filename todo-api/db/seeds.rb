@@ -6,5 +6,5 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Todo.create(title: "Buy food: fdsafds", done: false)
-Todo.create(title: "test2", done: true)
+Todo.create(title: "Buy food: fdsafds", done: false,comment: "testcomment1")
+Todo.create(title: "test2", done: true,comment: "testcomment1")
