@@ -12,12 +12,15 @@ class TodosController < ApplicationController
 
   def show
     todo = Todo.find(params[:id])
-    render json: todo
+    render json: todo, include: :tags
   end
 
   def update
   	todo = Todo.find(params[:id])
   	todo.update(todo_params)
+    if !todo.tags.nil?
+      todo.tags = tags_params.map{|tag| Tag.where(name: tag).first_or_create!(name: tag)}
+    end
   	render json: todo, include: :tags
   end
 
@@ -32,7 +35,7 @@ class TodosController < ApplicationController
   	  params.require(:todo).permit(:title, :done)
   	end
     def tags_params
-      params['tags'].empty? ? [] : params.require(:tags)
+      params['tags'].nil? || params['tags'].empty? ? [] : params.require(:tags)
     end
 
 end

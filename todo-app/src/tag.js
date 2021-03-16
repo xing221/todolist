@@ -6,20 +6,17 @@ import {Link} from 'react-router-dom'
 const Tag = (props) => {
 	const [tag, setTag] = useState([]);
 
-	const {match} = props 
-
-	const getTag = () => {
-		axios.get(`/api/v1/tags/${match.params.id}`)
-		.then(response => {
-			setTag(response.data)
-		})
-		.catch(error => console.log(error))
-	}
-
-
 	useEffect(() => {
+		const {match} = props
+		const getTag = () => {
+			axios.get(`/api/v1/tags/${match.params.id}`)
+			.then(response => {
+				setTag(response.data)
+			})
+			.catch(error => console.log(error))
+		}
 		getTag()
-	}, [])
+	}, [props])
 
 
 	return (
